@@ -57,18 +57,19 @@ func (a *AllResult) Cursor() *mongo.Cursor { return a.cursor }
 // Err returns a underlying error
 func (a *AllResult) Err() error { return a.err }
 
-// All decodes all found documents into a variable.
+// Decode decodes all found documents into a variable.
 // The data parameter may be a pointer to an slice of struct.
 // Also data parameter may be a pointer to an slice of pointers to a struct.
 // For examples:
 //
 //    var data1 []Struct // slice of struct
-//    err := collection.FindAll(ctx, bson.D{}).All(&data1) // pointer to an slice of ...
+//    err := collection.FindAll(ctx, bson.D{}).Decode(&data1) // pointer to an slice of ...
 //
 //    var data2 []*Struct // slice of pointers to a struct
-//    err := collection.FindAll(ctx, bson.D{}).All(&data2) // pointer to an slice of ...
+//    err := collection.FindAll(ctx, bson.D{}).Decode(&data2) // pointer to an slice of ...
 //
-func (a *AllResult) All(data interface{}) error {
+// If no documents are found, an empty slice is returned.
+func (a *AllResult) Decode(data interface{}) error {
 	if a.err != nil {
 		return a.err
 	}

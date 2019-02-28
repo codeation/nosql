@@ -3,13 +3,13 @@ Layer for convenient use of go.mongodb.org/mongo-driver
 
 [![GoDoc](https://godoc.org/github.com/codeation/nosql?status.svg)](https://godoc.org/github.com/codeation/nosql)
 
-# FindAll method
+# FindAll(...).Decode(...) chain
 
-FindAll decodes an array of documents from mongodb.
+You can use the FindAll Decode chain to decode an array of documents from mongodb.
 
 ```
 	var data []Elem
-	if err := collection.FindAll(ctx, bson.D{}).All(&data); err != nil {
+	if err := collection.FindAll(ctx, bson.D{}).Decode(&data); err != nil {
 		return err
 	}
 
@@ -20,11 +20,17 @@ FindAll decodes an array of documents from mongodb.
 
 ```
 
-FindAll wraps the [func (*Collection) Find](https://godoc.org/go.mongodb.org/mongo-driver/mongo#Collection.Find) results,
-so the parameters are the same.
+It is like calling FindOne Decode chain to decode a single document in a
+[standard mongodb driver](https://godoc.org/go.mongodb.org/mongo-driver/mongo).
 
-Data parameter of func All may be a pointer to an slice of struct.
+FindAll wraps the
+[func (*Collection) Find](https://godoc.org/go.mongodb.org/mongo-driver/mongo#Collection.Find)
+results, so the parameters are the same.
+
+Data parameter of func Decode may be a pointer to an slice of struct.
 Also data parameter may be a pointer to an slice of pointers to a struct, see below.
+
+If no documents are found, an empty slice is returned.
 
 # Minimal example
 
@@ -62,7 +68,7 @@ func main() {
 	collection := db.Collection("test")
 
 	var data []*Elem
-	if err := collection.FindAll(ctx, bson.D{}).All(&data); err != nil {
+	if err := collection.FindAll(ctx, bson.D{}).Decode(&data); err != nil {
 		return
 	}
 
