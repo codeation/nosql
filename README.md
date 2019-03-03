@@ -93,7 +93,18 @@ NextSequence returns next ID value.
     }
 ```
 
-This can be useful when you plan to use int64 ID values,
-or you need to know the value of ID before inserting the document.
+This can be useful when you plan to use int64 values as IDs,
+or you need to know the new ID before inserting the document.
+
+NextSequence uses the atomic operation
+[$inc](https://docs.mongodb.com/manual/reference/operator/update/inc/).
+
+Make sure that the "counters" collection has an index by "id" field:
+
+```
+db.counters.createIndex( { id: 1 } )
+```
+
+## Documentation
 
 See the [documentation](https://godoc.org/github.com/codeation/nosql) for details.

@@ -14,7 +14,8 @@ type counter struct {
 	Seq int64  `bson:"seq"`
 }
 
-// NextSequence returns next ID value
+// NextSequence returns next ID value.
+// Make sure that the "counters" collection has an index by "id" field
 func (db *Database) NextSequence(ctx context.Context, idName string) (int64, error) {
 	var c counter
 	err := db.Collection(sequenceCollectionName).FindOneAndUpdate(ctx,
@@ -27,10 +28,9 @@ func (db *Database) NextSequence(ctx context.Context, idName string) (int64, err
 
 // InitSequence sets last used value for ID name; InitSequence needs for data migration only
 func (db *Database) InitSequence(ctx context.Context, idName string, idValue int64) error {
-	_, err := db.Collection(sequenceCollectionName).InsertOne(ctx,
-		&counter{
-			ID:  idName,
-			Seq: idValue,
-		})
-	return err
+	return db.Collection(sequenceCollectionName).FindOneAndUpdate(ctx,
+		bson.M{"id": idName},
+		bson.M{"$set": bson.M{"seq": idValue}},
+		options.FindOneAndUpdate().SetUpsert(true)).
+		Err()
 }
