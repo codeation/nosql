@@ -3,13 +3,13 @@ Layer for convenient use of go.mongodb.org/mongo-driver
 
 [![GoDoc](https://godoc.org/github.com/codeation/nosql?status.svg)](https://godoc.org/github.com/codeation/nosql)
 
-# FindAll(...).Decode(...) chain
+## FindMany(...).Decode(...) chain
 
-You can use the FindAll Decode chain to decode an array of documents from mongodb.
+You can use the FindMany Decode chain to decode an array of documents from mongodb.
 
 ```
 	var data []Elem
-	if err := collection.FindAll(ctx, bson.D{}).Decode(&data); err != nil {
+	if err := collection.FindMany(ctx, bson.D{}).Decode(&data); err != nil {
 		return err
 	}
 
@@ -23,7 +23,7 @@ You can use the FindAll Decode chain to decode an array of documents from mongod
 It is like calling FindOne Decode chain to decode a single document in a
 [standard mongodb driver](https://godoc.org/go.mongodb.org/mongo-driver/mongo).
 
-FindAll wraps the
+FindMany wraps the
 [func (*Collection) Find](https://godoc.org/go.mongodb.org/mongo-driver/mongo#Collection.Find)
 results, so the parameters are the same.
 
@@ -32,7 +32,7 @@ Also data parameter may be a pointer to an slice of pointers to a struct, see be
 
 If no documents are found, an empty slice is returned.
 
-# Minimal example
+## Minimal example
 
 ```
 package main
@@ -68,7 +68,7 @@ func main() {
 	collection := db.Collection("test")
 
 	var data []*Elem
-	if err := collection.FindAll(ctx, bson.D{}).Decode(&data); err != nil {
+	if err := collection.FindMany(ctx, bson.D{}).Decode(&data); err != nil {
 		return
 	}
 
@@ -77,5 +77,23 @@ func main() {
 	}
 }
 ```
+
+## NextSequence func
+
+NextSequence returns next ID value.
+
+```
+    id, err := db.NextSequence(ctx, "elemid")
+    if err != nil {
+        return err
+    }
+    e := &Element {
+        ID: id,
+        ... // Other fields
+    }
+```
+
+This can be useful when you plan to use int64 ID values,
+or you need to know the value of ID before inserting the document.
 
 See the [documentation](https://godoc.org/github.com/codeation/nosql) for details.

@@ -1,4 +1,4 @@
-// Package nosql implements (*Collection) FindAll method
+// Package nosql implements wrappers for go.mongodb.org/mongo-driver
 package nosql
 
 import (
@@ -22,8 +22,8 @@ type Collection struct {
 	*mongo.Collection
 }
 
-// AllResult contains Find results
-type AllResult struct {
+// ManyResult contains Find results
+type ManyResult struct {
 	ctx    context.Context
 	cursor *mongo.Cursor
 	err    error
@@ -39,12 +39,12 @@ func (db *Database) Collection(name string, opts ...*options.CollectionOptions) 
 	}
 }
 
-// FindAll finds all documents that match the filter and options
-func (c *Collection) FindAll(
+// FindMany finds all documents that match the filter and options
+func (c *Collection) FindMany(
 	ctx context.Context, filter interface{}, opts ...*options.FindOptions,
-) *AllResult {
+) *ManyResult {
 	cursor, err := c.Collection.Find(ctx, filter, opts...)
-	return &AllResult{
+	return &ManyResult{
 		ctx:    ctx,
 		cursor: cursor,
 		err:    err,
@@ -52,10 +52,10 @@ func (c *Collection) FindAll(
 }
 
 // Cursor returns a underlying *mongo.Cursor
-func (a *AllResult) Cursor() *mongo.Cursor { return a.cursor }
+func (a *ManyResult) Cursor() *mongo.Cursor { return a.cursor }
 
 // Err returns a underlying error
-func (a *AllResult) Err() error { return a.err }
+func (a *ManyResult) Err() error { return a.err }
 
 // Decode decodes all found documents into a variable.
 // The data parameter may be a pointer to an slice of struct.
@@ -63,13 +63,13 @@ func (a *AllResult) Err() error { return a.err }
 // For examples:
 //
 //    var data1 []Struct // slice of struct
-//    err := collection.FindAll(ctx, bson.D{}).Decode(&data1) // pointer to an slice of ...
+//    err := collection.FindMany(ctx, bson.D{}).Decode(&data1) // pointer to an slice of ...
 //
 //    var data2 []*Struct // slice of pointers to a struct
-//    err := collection.FindAll(ctx, bson.D{}).Decode(&data2) // pointer to an slice of ...
+//    err := collection.FindMany(ctx, bson.D{}).Decode(&data2) // pointer to an slice of ...
 //
 // If no documents are found, an empty slice is returned.
-func (a *AllResult) Decode(data interface{}) error {
+func (a *ManyResult) Decode(data interface{}) error {
 	if a.err != nil {
 		return a.err
 	}
