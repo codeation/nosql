@@ -8,7 +8,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readconcern"
 )
 
 const sectionName = "mongodb"
@@ -55,9 +54,7 @@ func (d *Databases) Get(ctx context.Context, name string,
 	if err != nil {
 		return nil, err
 	}
-	opt := options.Client().
-		SetReadConcern(readconcern.Majority()).
-		ApplyURI(uri)
+	opt := options.Client().ApplyURI(uri)
 	opts := append([]*options.ClientOptions{opt}, d.opts...)
 	client, err := mongo.Connect(ctx, options.MergeClientOptions(opts...))
 	if err != nil {
