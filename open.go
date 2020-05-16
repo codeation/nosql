@@ -16,6 +16,8 @@ const schemePrefix = "mongodb://"
 
 var errorVariable = errors.New("variable not found")
 
+const sides = 2
+
 // IniFile is interface to read INI file variables.
 type IniFile interface {
 	Get(section string, name string) string
@@ -95,12 +97,9 @@ func (d *Databases) getURI(name string) (string, string, error) {
 	u.Path = "/"
 
 	// user = username:password or separate lines, user = username and password = password
-	users := strings.SplitN(d.ini.Get(u.Host, "user"), ":", 2)
-	if len(users) == 1 {
-		if pass := d.ini.Get(u.Host, "password"); pass != "" {
-			u.User = url.UserPassword(users[0], pass)
-		}
-	} else {
+	if d.ini.Get(u.Host, "user") != "" && d.ini.Get(u.Host, "password") != "" {
+		u.User = url.UserPassword(d.ini.Get(u.Host, "user"), d.ini.Get(u.Host, "password"))
+	} else if users := strings.SplitN(d.ini.Get(u.Host, "user"), ":", sides); len(users) == sides {
 		u.User = url.UserPassword(users[0], users[1])
 	}
 
