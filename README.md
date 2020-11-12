@@ -1,7 +1,7 @@
 # nosql
 A wrapper to make it easier to use go.mongodb.org/mongo-driver
 
-[![PkgGoDev](https://pkg.go.dev/badge/codeation/nosql)](https://pkg.go.dev/codeation/nosql)
+[![PkgGoDev](https://pkg.go.dev/badge/codeation/nosql)](https://pkg.go.dev/github.com/codeation/nosql)
 
 ## FindMany(...).Decode(...) chain
 
