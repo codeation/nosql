@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Finder is part of the mongo.Collection interface.
+// Finder is a part of the mongo.Collection interface.
 type Finder interface {
 	Find(ctx context.Context, filter interface{}, opts ...*options.FindOptions) (*mongo.Cursor, error)
 }
