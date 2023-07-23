@@ -48,6 +48,19 @@ func (c *Collection) FindMany(
 	}
 }
 
+// AggregateMany returns aggregate results
+func (c *Collection) AggregateMany(
+	ctx context.Context, pipeline interface{}, opts ...*options.AggregateOptions,
+) *ManyResult {
+	cursor, err := c.Collection.Aggregate(ctx, pipeline, opts...)
+
+	return &ManyResult{
+		ctx:    ctx,
+		cursor: cursor,
+		err:    err,
+	}
+}
+
 // Cursor returns a underlying *mongo.Cursor.
 func (a *ManyResult) Cursor() *mongo.Cursor { return a.cursor }
 
