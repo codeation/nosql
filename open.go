@@ -25,17 +25,17 @@ type IniFile interface {
 
 // Databases represents mongodb database pool.
 type Databases struct {
-	ini  IniFile
-	dbs  map[string]*Database
-	opts []*options.ClientOptions
+	ini        IniFile
+	dbs        map[string]*Database
+	clientOpts []*options.ClientOptions
 }
 
 // Open returns mongodb database pool.
 func Open(ini IniFile, opts ...*options.ClientOptions) *Databases {
 	return &Databases{
-		ini:  ini,
-		dbs:  map[string]*Database{},
-		opts: opts,
+		ini:        ini,
+		dbs:        map[string]*Database{},
+		clientOpts: opts,
 	}
 }
 
@@ -51,8 +51,8 @@ func (d *Databases) Close(ctx context.Context) error {
 }
 
 // Get returns database hanle.
-func (d *Databases) Get(ctx context.Context, name string,
-	dbopts ...*options.DatabaseOptions) (*Database, error) {
+func (d *Databases) Get(ctx context.Context, name string, dbOpts ...*options.DatabaseOptions,
+) (*Database, error) {
 	if db, ok := d.dbs[name]; ok {
 		return db, nil
 	}
@@ -62,15 +62,13 @@ func (d *Databases) Get(ctx context.Context, name string,
 		return nil, err
 	}
 
-	opt := options.Client().ApplyURI(uri)
-	opts := append([]*options.ClientOptions{opt}, d.opts...)
-
-	client, err := mongo.Connect(ctx, options.MergeClientOptions(opts...))
+	client, err := mongo.Connect(ctx,
+		append([]*options.ClientOptions{options.Client().ApplyURI(uri)}, d.clientOpts...)...)
 	if err != nil {
 		return nil, err
 	}
 
-	db := NewDatabase(client.Database(dbname, dbopts...))
+	db := NewDatabase(client.Database(dbname, dbOpts...))
 	d.dbs[name] = db
 
 	return db, nil

@@ -48,7 +48,7 @@ func (c *Collection) FindMany(
 	}
 }
 
-// AggregateMany returns aggregate results
+// AggregateMany returns aggregate command results.
 func (c *Collection) AggregateMany(
 	ctx context.Context, pipeline interface{}, opts ...*options.AggregateOptions,
 ) *ManyResult {
@@ -72,11 +72,11 @@ func (a *ManyResult) Err() error { return a.err }
 // Also data parameter may be a pointer to an slice of pointers to a struct.
 // For examples:
 //
-//    var data1 []Struct // slice of struct
-//    err := collection.FindMany(ctx, bson.D{}).Decode(&data1) // pointer to an slice of ...
+//	var data1 []Struct // slice of struct
+//	err := collection.FindMany(ctx, bson.D{}).Decode(&data1) // pointer to an slice of ...
 //
-//    var data2 []*Struct // slice of pointers to a struct
-//    err := collection.FindMany(ctx, bson.D{}).Decode(&data2) // pointer to an slice of ...
+//	var data2 []*Struct // slice of pointers to a struct
+//	err := collection.FindMany(ctx, bson.D{}).Decode(&data2) // pointer to an slice of ...
 //
 // If no documents are found, an empty slice is returned.
 func (a *ManyResult) Decode(data interface{}) error {

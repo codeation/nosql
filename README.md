@@ -125,6 +125,19 @@ func main() {
 }
 ```
 
+## AggregateMany(...).Decode(...) chain
+
+You can use the AggregateMany Decode chain to decode an array of documents from aggregate command results.
+
+```
+	collection := client.Database("test").Collection("test")
+
+	var data []Elem
+	if err := nosql.AggregateMany(ctx, collection, bson.D{}).Decode(&data); err != nil {
+		return err
+	}
+```
+
 ## NextSequence func
 
 NextSequence returns next ID value.
