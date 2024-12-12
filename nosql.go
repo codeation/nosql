@@ -4,8 +4,8 @@ package nosql
 import (
 	"context"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 // Database is a mongo.Database wrapper.
@@ -29,7 +29,7 @@ type ManyResult struct {
 func NewDatabase(db *mongo.Database) *Database { return &Database{Database: db} }
 
 // Collection returns a handle for collection of database.
-func (db *Database) Collection(name string, opts ...*options.CollectionOptions) *Collection {
+func (db *Database) Collection(name string, opts ...options.Lister[options.CollectionOptions]) *Collection {
 	return &Collection{
 		Collection: db.Database.Collection(name, opts...),
 	}
@@ -37,7 +37,7 @@ func (db *Database) Collection(name string, opts ...*options.CollectionOptions) 
 
 // FindMany finds all documents that match the filter and options.
 func (c *Collection) FindMany(
-	ctx context.Context, filter interface{}, opts ...*options.FindOptions,
+	ctx context.Context, filter interface{}, opts ...options.Lister[options.FindOptions],
 ) *ManyResult {
 	cursor, err := c.Collection.Find(ctx, filter, opts...)
 
@@ -50,7 +50,7 @@ func (c *Collection) FindMany(
 
 // AggregateMany returns aggregate command results.
 func (c *Collection) AggregateMany(
-	ctx context.Context, pipeline interface{}, opts ...*options.AggregateOptions,
+	ctx context.Context, pipeline interface{}, opts ...options.Lister[options.AggregateOptions],
 ) *ManyResult {
 	cursor, err := c.Collection.Aggregate(ctx, pipeline, opts...)
 

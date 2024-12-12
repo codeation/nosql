@@ -7,8 +7,8 @@ import (
 	"net/url"
 	"strings"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 const sectionName = "mongodb"
@@ -51,7 +51,7 @@ func (d *Databases) Close(ctx context.Context) error {
 }
 
 // Get returns database hanle.
-func (d *Databases) Get(ctx context.Context, name string, dbOpts ...*options.DatabaseOptions,
+func (d *Databases) Get(ctx context.Context, name string, opts ...options.Lister[options.DatabaseOptions],
 ) (*Database, error) {
 	if db, ok := d.dbs[name]; ok {
 		return db, nil
@@ -62,13 +62,13 @@ func (d *Databases) Get(ctx context.Context, name string, dbOpts ...*options.Dat
 		return nil, err
 	}
 
-	client, err := mongo.Connect(ctx,
+	client, err := mongo.Connect(
 		append([]*options.ClientOptions{options.Client().ApplyURI(uri)}, d.clientOpts...)...)
 	if err != nil {
 		return nil, err
 	}
 
-	db := NewDatabase(client.Database(dbname, dbOpts...))
+	db := NewDatabase(client.Database(dbname, opts...))
 	d.dbs[name] = db
 
 	return db, nil

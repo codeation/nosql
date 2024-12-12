@@ -1,7 +1,7 @@
 # nosql
-A wrapper to make it easier to use go.mongodb.org/mongo-driver
+A wrapper to make it easier to use go.mongodb.org/mongo-driver/v2
 
-[![PkgGoDev](https://pkg.go.dev/badge/codeation/nosql)](https://pkg.go.dev/github.com/codeation/nosql)
+[![PkgGoDev](https://pkg.go.dev/badge/codeation/nosql/v2)](https://pkg.go.dev/github.com/codeation/nosql/v2)
 
 ## FindMany(...).Decode(...) chain
 
@@ -23,10 +23,10 @@ You can use the FindMany Decode chain to decode an array of documents from mongo
 ```
 
 It is like calling FindOne Decode chain to decode a single document in a
-[standard mongodb driver](https://godoc.org/go.mongodb.org/mongo-driver/mongo).
+[standard mongodb driver](https://godoc.org/go.mongodb.org/mongo-driver/v2/mongo).
 
 FindMany wraps the
-[func (*Collection) Find](https://godoc.org/go.mongodb.org/mongo-driver/mongo#Collection.Find)
+[func (*Collection) Find](https://godoc.org/go.mongodb.org/mongo-driver/v2/mongo#Collection.Find)
 results, so the parameters are the same.
 
 Data parameter of func Decode may be a pointer to an slice of struct.
@@ -43,10 +43,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/codeation/nosql"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/codeation/nosql/v2"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 type Elem struct {
@@ -88,10 +88,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/codeation/nosql"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/codeation/nosql/v2"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 type Elem struct {
